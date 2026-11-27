@@ -15,6 +15,9 @@ nonisolated struct LanguageService: LanguageServicing {
     func supportedLanguages() async -> [AppLanguage] {
         await LanguageAvailability().supportedLanguages
             .map(AppLanguage.init)
-            .sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
+            .sorted {
+                $0.name.localizedCaseInsensitiveCompare($1.name)
+                    == .orderedAscending
+            }
     }
 }

@@ -50,7 +50,8 @@ final class TranslateViewModel {
         self.languageService = languageService
         self.onComplete = onComplete
 
-        let saved = UserDefaults.standard.string(forKey: Self.languageKey) ?? "es"
+        let saved =
+            UserDefaults.standard.string(forKey: Self.languageKey) ?? "es"
         let initial = AppLanguage(Locale.Language(identifier: saved))
         self.targetLanguage = initial
         self.availableLanguages = [initial]
@@ -141,7 +142,7 @@ final class TranslateViewModel {
             return
         }
         do {
-            try speech.start { text, isFinal in
+            try speech.start { [weak self] text, isFinal in
                 Task { @MainActor [weak self] in
                     guard let self else { return }
                     if !text.isEmpty { self.inputText = text }
@@ -158,7 +159,7 @@ final class TranslateViewModel {
         speech.stop()
         isRecording = false
     }
-    
+
     func loadLanguages() async {
         let languages = await languageService.supportedLanguages()
         if !languages.isEmpty { availableLanguages = languages }
@@ -168,7 +169,7 @@ final class TranslateViewModel {
         guard language != targetLanguage else { return }
         targetLanguage = language
         UserDefaults.standard.set(language.id, forKey: Self.languageKey)
-        configuration = nil          // forces a fresh session with the new target
+        configuration = nil  // forces a fresh session with the new target
         phase = .idle
     }
 }

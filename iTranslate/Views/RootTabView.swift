@@ -10,8 +10,12 @@ import SwiftUI
 struct RootTabView: View {
     var body: some View {
         TabView {
-            Tab("Translate", systemImage: "character.bubble") { TranslateView() }
-            Tab("History", systemImage: "clock.arrow.circlepath") { HistoryView() }
+            Tab("Translate", systemImage: "character.bubble") {
+                TranslateView()
+            }
+            Tab("History", systemImage: "clock.arrow.circlepath") {
+                HistoryView()
+            }
         }
     }
 }

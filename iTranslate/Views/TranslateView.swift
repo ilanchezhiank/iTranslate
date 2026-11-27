@@ -19,7 +19,9 @@ struct TranslateView: View {
             } else {
                 ProgressView().task {
                     // Inject the history store into the view model once the environment is available.
-                    viewModel = TranslateViewModel(onComplete: { history.add($0) })
+                    viewModel = TranslateViewModel(onComplete: {
+                        history.add($0)
+                    })
                 }
             }
         }
@@ -64,13 +66,20 @@ struct TranslateView: View {
             }
             HStack {
                 Spacer()
-                Button { vm.toggleRecording() } label: {
-                    Image(systemName: vm.isRecording ? "stop.circle.fill" : "mic.circle.fill")
-                        .font(.system(size: 36))
-                        .symbolEffect(.pulse, isActive: vm.isRecording)
-                        .foregroundStyle(vm.isRecording ? .red : .accentColor)
+                Button {
+                    vm.toggleRecording()
+                } label: {
+                    Image(
+                        systemName: vm.isRecording
+                            ? "stop.circle.fill" : "mic.circle.fill"
+                    )
+                    .font(.system(size: 36))
+                    .symbolEffect(.pulse, isActive: vm.isRecording)
+                    .foregroundStyle(vm.isRecording ? .red : .accentColor)
                 }
-                .accessibilityLabel(vm.isRecording ? "Stop dictation" : "Start dictation")
+                .accessibilityLabel(
+                    vm.isRecording ? "Stop dictation" : "Start dictation"
+                )
             }
         }
         .padding()
@@ -78,7 +87,9 @@ struct TranslateView: View {
     }
 
     private func translateButton(vm: TranslateViewModel) -> some View {
-        Button { vm.translateTapped() } label: {
+        Button {
+            vm.translateTapped()
+        } label: {
             HStack {
                 if vm.isBusy { ProgressView().tint(.white) }
                 Text(buttonTitle(vm.phase)).fontWeight(.semibold)
@@ -103,8 +114,13 @@ struct TranslateView: View {
         HStack {
             Text("Translate to").foregroundStyle(.secondary)
             Spacer()
-            Picker("Target language",
-                   selection: Binding(get: { vm.targetLanguage }, set: { vm.select($0) })) {
+            Picker(
+                "Target language",
+                selection: Binding(
+                    get: { vm.targetLanguage },
+                    set: { vm.select($0) }
+                )
+            ) {
                 ForEach(vm.availableLanguages) { Text($0.name).tag($0) }
             }
             .pickerStyle(.menu)
@@ -112,7 +128,7 @@ struct TranslateView: View {
         }
         .padding(.horizontal)
     }
-    
+
     @ViewBuilder
     private func resultSection(vm: TranslateViewModel) -> some View {
         switch vm.phase {
@@ -130,18 +146,24 @@ struct ResultCard: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-//            Text("Spanish").font(.caption).foregroundStyle(.secondary)
-            Text(record.targetLanguageName).font(.caption2).foregroundStyle(.tertiary)
+            //            Text("Spanish").font(.caption).foregroundStyle(.secondary)
+            Text(record.targetLanguageName).font(.caption2).foregroundStyle(
+                .tertiary
+            )
             Text(record.translated).font(.title3).textSelection(.enabled)
 
             Divider()
 
             if let v = record.validation {
                 HStack {
-                    Label(v.isAccurate ? "Looks accurate" : "Needs review",
-                          systemImage: v.isAccurate ? "checkmark.seal.fill" : "exclamationmark.triangle.fill")
-                        .foregroundStyle(v.isAccurate ? .green : .orange)
-                        .font(.headline)
+                    Label(
+                        v.isAccurate ? "Looks accurate" : "Needs review",
+                        systemImage: v.isAccurate
+                            ? "checkmark.seal.fill"
+                            : "exclamationmark.triangle.fill"
+                    )
+                    .foregroundStyle(v.isAccurate ? .green : .orange)
+                    .font(.headline)
                     Spacer()
                     Text("\(v.score)/10").font(.headline.monospacedDigit())
                 }
@@ -150,8 +172,11 @@ struct ResultCard: View {
                     Text("Suggestion: \(v.suggestedCorrection)").font(.callout)
                 }
             } else {
-                Label("AI validation unavailable on this device", systemImage: "sparkles")
-                    .font(.callout).foregroundStyle(.secondary)
+                Label(
+                    "AI validation unavailable on this device",
+                    systemImage: "sparkles"
+                )
+                .font(.callout).foregroundStyle(.secondary)
             }
         }
         .padding()
